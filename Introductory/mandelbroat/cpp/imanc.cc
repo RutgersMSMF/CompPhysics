@@ -1,6 +1,6 @@
-#include "pybind11/pybind11.h"
-#include "pybind11/numpy.h"
-#include "pybind11/stl.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #include <cstdint>
 
 namespace py = pybind11;
@@ -18,11 +18,11 @@ void mand(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector
       complex<double> z0(x,y);
       complex<double> z=0;
       for (int itr=0; itr<max_steps; itr++){
-	if (norm(z)>4.){
-	  dat(j,i) = itr;
-	  break;
-	}
-	z = z*z + z0;
+        if (norm(z)>4.){
+          dat(j,i) = itr;
+        break;
+        }
+        z = z*z + z0;                                 
       }
       //if (norm(z)<4.) dat(j,i) = max_steps;
     }

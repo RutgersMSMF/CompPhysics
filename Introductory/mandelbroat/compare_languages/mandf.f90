@@ -30,20 +30,27 @@ program mand
   INTEGER, parameter :: Ny = 1000
   INTEGER, parameter :: max_steps = 1000
   REAL*8  :: ext(4) = (/-2., 1., -1., 1./) ! The limits of plotting
-  REAL*8  :: mande(Nx,Ny)
-  REAL    :: start, finish, startw, finishw
+  !REAL*8 :: mande(Nx,Ny)
+  REAL*8, allocatable :: mande(:,:)
+  REAL*8  :: start, finish, startw, finishw
+
+  allocate (mande(Nx, Ny))
   
   call cpu_time(start)
   startw  = OMP_get_wtime()
   
   !$OMP PARALLEL DO  PRIVATE(j,x,y,z0)
   do i=1,Nx
+
      do j=1,Ny
+
         x = ext(1) + (ext(2)-ext(1))*(i-1.)/(Nx-1.)
         y = ext(3) + (ext(4)-ext(3))*(j-1.)/(Ny-1.)
         z0 = dcmplx(x,y)
         mande(i,j) = Mandelb(z0, max_steps)
+
      enddo
+
   enddo
   !$OMP END PARALLEL DO
 
@@ -51,11 +58,19 @@ program mand
   call cpu_time(finish)
   WRITE(0, '("clock time : ",f6.3,"s  wall time=",f6.3,"s")') finish-start, finishw-startw
 
+!   PRINT *, "Sleeping..."
+!   call sleep(1)
+
   do i=1,Nx
+
      do j=1,Ny
+
         x = ext(1) + (ext(2)-ext(1))*(i-1.)/(Nx-1.)
         y = ext(3) + (ext(4)-ext(3))*(j-1.)/(Ny-1.)
         print *, x, y, 1./mande(i,j)
+
      enddo
+
   enddo
+
 end program mand
