@@ -6,7 +6,7 @@
 namespace py = pybind11;
 using namespace std;
 
-void mand(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector<int>& ext) {
+void tri(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector<int>& ext) {
 
   auto dat = data.mutable_unchecked<2>();
 
@@ -30,7 +30,8 @@ void mand(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector
 	        break;
 	    }
 	    
-        z = z*z + z0;
+        // Complex Conjugate 
+        z = std::conj(z * z) + z0;
       
       }
 
@@ -40,7 +41,9 @@ void mand(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector
 
 }
 
-PYBIND11_MODULE(imanc, m){
-  m.doc() = "pybind11 wrap for mandelbrot";
-  m.def("mand", &mand);
+PYBIND11_MODULE(tricorn, t){
+
+  t.doc() = "PyBind11 Wrapper for Tricorn Set";
+  t.def("tri", &tri);
+
 }

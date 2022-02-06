@@ -10,5 +10,5 @@ mandf : mandf.f90
 	gfortran -O3 -fopenmp -o mandf mandf.f90
 
 clean :
-	rm -f mandc mandf
+	del -f mandc mandf
 

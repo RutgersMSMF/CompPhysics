@@ -4,9 +4,9 @@ import time
 from timeit import default_timer as timer
 from numba import jit
 
-import imanc
+import tricorn
 
-def MandPyth(ext, max_steps, Nx, Ny):
+def TricornPython(ext, max_steps, Nx, Ny):
 
     data = ones((Nx, Ny)) * max_steps
 
@@ -25,12 +25,12 @@ def MandPyth(ext, max_steps, Nx, Ny):
                     data[j, i] = itr
                     break
 
-                z = z * z + z0
+                z = np.conjugate(z * z) + z0
 
     return data
 
 @jit(nopython=True)
-def MandNumba(ext, max_steps, Nx, Ny):
+def TricornNumba(ext, max_steps, Nx, Ny):
 
     data = ones((Nx, Ny)) * max_steps
 
@@ -50,24 +50,24 @@ def MandNumba(ext, max_steps, Nx, Ny):
                     data[j, i] = itr
                     break
 
-                z = z * z + z0
+                z = np.conjugate(z * z) + z0
 
     return data
 
-def MandPybind11(ext, max_steps, Nx, Ny):
+def TricornPybind11(ext, max_steps, Nx, Ny):
     data = ones((Ny, Nx));
-    imanc.mand(data, Nx, Ny, max_steps, ext)
+    tricorn.tri(data, Nx, Ny, max_steps, ext)
     return data
 
 Nx = 1000
 Ny = 1000
 max_steps = 1000
 
-ext = [-2, 1, -1, 1]
+ext = [-3/2, 1, -3/2, 3/2]
 
 t0 = time.time()
 t0_ = time.process_time()
-data = MandPybind11(ext, max_steps, Nx, Ny)
+data = TricornPybind11(ext, max_steps, Nx, Ny)
 t1 = time.time()
 t1_ = time.process_time()
 print('pybind11: walltime: ', t1 - t0, 'cputime: ', t1_ - t0_)
@@ -76,16 +76,9 @@ show()
 
 t0 = time.time()
 t0_ = time.process_time()
-data = MandNumba(array(ext), max_steps, Nx, Ny)
+data = TricornNumba(array(ext), max_steps, Nx, Ny)
 t1 = time.time()
 t1_ = time.process_time()
 print('numba: walltime: ', t1 - t0, 'cputime: ', t1_ - t0_)
 imshow(data, extent=ext)
 show()
-    
-#t0 = time.time()
-#data = MandPyth(array(ext), max_steps, Nx, Ny)
-#t1 = time.time()
-#print('Python: ', t1-t0)
-#imshow(data, extent=ext)
-#show()

@@ -3,10 +3,18 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:/Users/18627/Documents/GitHub/CompPhysics/Introductory/mandelbroat/compare_languages",
-                "C:/Users/18627/Documents/GitHub/CompPhysics/Introductory/mandelbroat/cpp",
-                "C:/Users/18627/AppData/Local/Programs/Python/Python310/include",
-                "C:/Users/18627/AppData/Local/Programs/Python/Python310/Lib/site-packages/pybind11/include"
+                // Desktop
+                // "C:/Users/18627/Documents/GitHub/CompPhysics/Introductory/mandelbroat/compare_languages",
+                // "C:/Users/18627/Documents/GitHub/CompPhysics/Introductory/mandelbroat/cpp",
+                // "C:/Users/18627/AppData/Local/Programs/Python/Python310/include",
+                // "C:/Users/18627/AppData/Local/Programs/Python/Python310/Lib/site-packages/pybind11/include"
+
+                // Laptop
+                "C:/Users/Steve/Documents/GitHub/CompPhysics/Introductory/mandelbroat/compare_languages",
+                "C:/Users/Steve/Documents/GitHub/CompPhysics/Introductory/mandelbroat/cpp",
+                "C:/Users/Steve/Appdata/Local/Programs/Python/Python39/Include",
+                "C:/Users/Steve/AppData/Local/Programs/Python/Python39/lib/site-packages/pybind11/include"
+
             ],
             "defines": [
                 "_DEBUG",
@@ -16,6 +24,10 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64",
+            // Desktop
+            // "compilerPath": "C:/msys64/mingw64/bin/g++.exe"
+
+            // Laptop
             "compilerPath": "C:/msys64/mingw64/bin/g++.exe"
         }
     ],

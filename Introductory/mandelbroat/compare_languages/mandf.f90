@@ -5,13 +5,13 @@ INTEGER Function Mandelb(z0, max_steps)
   ! locals
   COMPLEX*16 :: z
   INTEGER    :: i
-  z=0.
-  do i=1,max_steps
-     if (abs(z)>2.) then
-        Mandelb = i-1
+  z = 0.0
+  do i = 1, max_steps
+     if (abs(z) > 2.0) then
+        Mandelb = i - 1
         return 
      end if
-     z = z*z + z0
+     z = z * z + z0
   end do
   Mandelb = max_steps
   return
@@ -29,9 +29,9 @@ program mand
   INTEGER, parameter :: Nx = 1000
   INTEGER, parameter :: Ny = 1000
   INTEGER, parameter :: max_steps = 1000
-  REAL*8  :: ext(4) = (/-2., 1., -1., 1./) ! The limits of plotting
+  REAL*8  :: ext(4) = (/-2.0, 1.0, -1.0, 1.0/) ! The limits of plotting
   !REAL*8 :: mande(Nx,Ny)
-  REAL*8, allocatable :: mande(:,:)
+  REAL*8, allocatable :: mande(:, :)
   REAL*8  :: start, finish, startw, finishw
 
   allocate (mande(Nx, Ny))
@@ -40,14 +40,14 @@ program mand
   startw  = OMP_get_wtime()
   
   !$OMP PARALLEL DO  PRIVATE(j,x,y,z0)
-  do i=1,Nx
+  do i = 1, Nx
 
-     do j=1,Ny
+     do j = 1, Ny
 
-        x = ext(1) + (ext(2)-ext(1))*(i-1.)/(Nx-1.)
-        y = ext(3) + (ext(4)-ext(3))*(j-1.)/(Ny-1.)
-        z0 = dcmplx(x,y)
-        mande(i,j) = Mandelb(z0, max_steps)
+        x = ext(1) + (ext(2) - ext(1)) * (i - 1.0) / (Nx - 1.0)
+        y = ext(3) + (ext(4) - ext(3)) * (j - 1.0) / (Ny - 1.0)
+        z0 = dcmplx(x, y)
+        mande(i, j) = Mandelb(z0, max_steps)
 
      enddo
 
@@ -56,18 +56,18 @@ program mand
 
   finishw = OMP_get_wtime()
   call cpu_time(finish)
-  WRITE(0, '("clock time : ",f6.3,"s  wall time=",f6.3,"s")') finish-start, finishw-startw
+  WRITE(0, '("clock time : ",f6.3,"s  wall time=",f6.3,"s")') finish - start, finishw - startw
 
 !   PRINT *, "Sleeping..."
 !   call sleep(1)
 
-  do i=1,Nx
+  do i = 1, Nx
 
-     do j=1,Ny
+     do j = 1, Ny
 
-        x = ext(1) + (ext(2)-ext(1))*(i-1.)/(Nx-1.)
-        y = ext(3) + (ext(4)-ext(3))*(j-1.)/(Ny-1.)
-        print *, x, y, 1./mande(i,j)
+        x = ext(1) + (ext(2) - ext(1)) * (i - 1.0) / (Nx - 1.0)
+        y = ext(3) + (ext(4) - ext(3)) * (j - 1.0) / (Ny - 1.0)
+        print *, x, y, 1.0 / mande(i, j)
 
      enddo
 

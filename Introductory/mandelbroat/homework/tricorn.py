@@ -3,9 +3,12 @@ from numpy import *
 from pylab import *
 import time
 from numba import jit 
-        
+
 @jit(nopython=True) 
-def MandNumba(ext, max_steps, Nx, Ny):
+def NumbaTricorn(ext, max_steps, Nx, Ny):
+
+    # Similar, Non Analytic Mapping
+    # The Tricorn Fractal
     
     data = ones((Nx, Ny)) * max_steps
 
@@ -24,7 +27,8 @@ def MandNumba(ext, max_steps, Nx, Ny):
                     data[j, i] = itr
                     break
 
-                z = z*z + z0
+                # Complex Conjugate
+                z = np.conjugate(z * z) + z0
 
     return data
 
@@ -36,7 +40,7 @@ def ax_update(ax):
     xend = xstart + xdelta
     yend = ystart + ydelta
     ext=array([xstart,xend,ystart,yend])
-    data = MandNumba(ext, max_steps, Nx, Ny) 
+    data = NumbaTricorn(ext, max_steps, Nx, Ny) 
     
 
     im = ax.images[-1]  
@@ -48,15 +52,16 @@ Nx = 1000
 Ny = 1000
 max_steps = 1000 
 
-ext = [-2, 1, -1, 1]
+ext = [-3/2, 1, -3/2, 3/2]
     
 t0 = time.time()    
-data = MandNumba(array(ext), max_steps, Nx, Ny)
+data = NumbaTricorn(array(ext), max_steps, Nx, Ny)
 t1 = time.time()
 print('Python: ', t1 - t0)
 
-fig,ax=subplots(1, 1)
+fig, ax = subplots(1, 1)
 ax.imshow(data, extent = ext, aspect = 'equal', origin = 'lower')
+ax.set_title("Tricorn Set")
     
 ax.callbacks.connect('xlim_changed', ax_update)
 ax.callbacks.connect('ylim_changed', ax_update)
