@@ -45,7 +45,7 @@ def TricornNumba(ext, max_steps, Nx, Ny):
 
             for itr in range(max_steps):
 
-                if z.real * z.real + z.imag * z.imag > 4.0:
+                if z.real * z.real + z.imag * z.imag > 2.0:
                     
                     data[j, i] = itr
                     break

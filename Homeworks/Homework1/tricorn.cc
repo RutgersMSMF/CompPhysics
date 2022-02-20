@@ -6,7 +6,7 @@
 namespace py = pybind11;
 using namespace std;
 
-void tri(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector<int>& ext) {
+void tri(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector<double>& ext) {
 
   auto dat = data.mutable_unchecked<2>();
 
@@ -23,7 +23,7 @@ void tri(py::array_t<double>& data, int Nx, int Ny, int max_steps, const vector<
 
       for (int itr = 0; itr < max_steps; itr++) {
 
-	    if (norm(z) > 4.0) {
+	    if (norm(z) > 2.0) {
 
 	        dat(j, i) = itr;
 
