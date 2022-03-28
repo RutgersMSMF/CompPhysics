@@ -14,6 +14,18 @@ def schroedinger_eqn(r, l, E):
 
     return l * (l + 1.0) / r**2 - 2.0 / r - E
 
+def compute_schroedinger(r, l, E):
+    """
+    Solves the Schroedinger Equation Using Numerov Method
+    """
+
+    ur = schroedinger_eqn(r[::-1], l, E)
+    ur = numerov_method(E, l)
+    norm = simps(ur**2, x = R)
+    X = ur * 1 / np.sqrt(abs(norm))
+
+    return X
+
 # Numerov Method to Solve ODE
 def numerov_method(E, l):
     """
@@ -47,18 +59,6 @@ def numerov_method(E, l):
         w_n = w_N
 
     return X[::-1]
-
-def compute_schroedinger(r, l, E):
-    """
-    Solves the Schroedinger Equation Using Numerov Method
-    """
-
-    ur = schroedinger_eqn(r[::-1], l, E)
-    ur = numerov_method(E, l)
-    norm = simps(ur**2, x = R)
-    X = ur * 1 / np.sqrt(abs(norm))
-
-    return X
 
 def shooting_method(E, l):
     """
@@ -148,68 +148,70 @@ def charge_density(bound_states, Z):
 
     return psi
 
-def electron_states(bound_states):
+if __name__ == "__main__":
 
-    # Compute Electron States
+    def electron_states(bound_states):
 
-    states = np.zeros(len(bound_states))
-    planck = 6.626e-34
-    rydberg = 1.096e7
-    light = 2.99e8
-    orbital = 1
+        # Compute Electron States
 
-    for i in range(1, len(bound_states)):
+        states = np.zeros(len(bound_states))
+        planck = 6.626e-34
+        rydberg = 1.096e7
+        light = 2.99e8
+        orbital = 1
 
-        states[i] = -planck * light * rydberg * (orbital**2 / i**2)
+        for i in range(1, len(bound_states)):
 
-    # Compute Second Part 
+            states[i] = -planck * light * rydberg * (orbital**2 / i**2)
 
-    rho = np.zeros(N)
+        # Compute Second Part 
 
-    for i in range(len(bound_states)):
+        rho = np.zeros(N)
 
-        ur = compute_schroedinger(R, bound_states[i][0], bound_states[i][1])    
-        rho += ur**2 / (4 * np.pi * R**2)
+        for i in range(len(bound_states)):
 
-    return states, rho
+            ur = compute_schroedinger(R, bound_states[i][0], bound_states[i][1])    
+            rho += ur**2 / (4 * np.pi * R**2)
 
-# Acts as Main Function
-def plot():
+        return states, rho
 
-    # Part One
-    f, (ax1, ax2) = plt.subplots(1, 2)
-    f.suptitle("Schroedinger Equation")
+    # Acts as Main Function
+    def plot():
 
-    # Call Numerov Method
-    X = compute_schroedinger(R, 0, -1)
+        # Part One
+        f, (ax1, ax2) = plt.subplots(1, 2)
+        f.suptitle("Schroedinger Equation")
 
-    ax1.plot(X)
-    ax1.set_title("Numerov Method: {l = -1, E = 0}")
+        # Call Numerov Method
+        X = compute_schroedinger(R, 0, -1)
 
-    # Print Bound States
-    bound_states = find_bound_states()
-    print("Bound States: ", bound_states)
-    bound_states = sorted(bound_states, key = cmpKey)
+        ax1.plot(X)
+        ax1.set_title("Numerov Method: {l = -1, E = 0}")
 
-    # Call Charge Density
-    Z = 103
-    density = charge_density(bound_states, Z)
-    ax2.plot(R, density * (4 * np.pi * R**2))
-    ax2.set_title("Charge Density")
+        # Print Bound States
+        bound_states = find_bound_states()
+        print("Bound States: ", bound_states)
+        bound_states = sorted(bound_states, key = cmpKey)
 
-    # Part One
-    f2, (ax1, ax2) = plt.subplots(1, 2)
-    f2.suptitle("Schroedinger Equation")
+        # Call Charge Density
+        Z = 28
+        density = charge_density(bound_states, Z)
+        ax2.plot(R, density * (4 * np.pi * R**2))
+        ax2.set_title("Charge Density")
 
-    # Call Electron States
-    es = electron_states(bound_states)
+        # Part One
+        f2, (ax1, ax2) = plt.subplots(1, 2)
+        f2.suptitle("Schroedinger Equation")
 
-    ax1.plot(es[0])
-    ax1.set_title("Electron States")
+        # Call Electron States
+        es = electron_states(bound_states)
 
-    ax2.plot(es[1])
-    ax2.set_title("Rho")
+        ax1.plot(es[0])
+        ax1.set_title("Electron States")
 
-    plt.show()
+        ax2.plot(es[1])
+        ax2.set_title("Rho")
 
-plot()
+        plt.show()
+
+    plot()
