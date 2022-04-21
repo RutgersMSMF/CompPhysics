@@ -177,11 +177,13 @@ if __name__ == '__main__':
         fig, (ax1, ax2) = plt.subplots(1, 2)
         fig.suptitle("Wang Landau Model")
 
+        numerical = np.exp(np.log(lngE[:10]))
+
         ax1.plot(np.log(exact), label = 'Exact')
-        ax1.plot(np.log(lngE[:10]), label = "Numerical")
+        ax1.plot(numerical, label = "Numerical")
         ax1.set_title("Actual vs Numerical")
 
-        ax2.plot(np.abs(np.log(exact) - np.log(lngE[:10])))
+        ax2.plot(np.abs(np.log(exact) - numerical))
         ax2.set_title("Difference")
 
         fig, (ax1) = plt.subplots(1, 1)
