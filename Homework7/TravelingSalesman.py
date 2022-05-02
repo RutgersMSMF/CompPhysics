@@ -33,6 +33,7 @@ def get_euclidean_distance(x, y):
 def reverse(x, y):
     """
     An alternative path is generated
+
     The cities in the chosen segment are reversed in order of visit
     """
 
@@ -99,100 +100,26 @@ def transpose(x, y):
         c = 0
 
     N = len(x)
-    print("Old: ", x)
-    print(a, b, c)
+    new_x = np.copy(x)
+    new_y = np.copy(y)
 
     if a < b:
 
-        # If the segment enters back
-        if (c + np.abs(b - a)) > len(x):
+        d = np.abs(b - a)
 
-            R = (c + np.abs(b - a)) % N
-            t1, t2 = 0, 0
+        for i in range(d):
 
-            for i in range(len(x)):
-                
-                if i < R:
-                    new_x[i] = x[(a + (np.abs(b - a) - R) + t1) % N]
-                    new_y[i] = y[(a + (np.abs(b - a) - R) + t1) % N]
-                    t1+=1
-
-                elif i < a + (np.abs(b - a)):
-                    new_x[i] = x[(a + t2) % N]
-                    new_y[i] = y[(a + t2) % N]
-                    t2 +=1
-                
-                else:
-                    new_x[i] = x[i]
-                    new_y[i] = y[i]
-
-        # If the segment does not enter back
-        else: 
-            
-            t1 , t2 = 0, 0
-
-            for i in range(len(x)):
-
-                if i < a:
-                    new_x[i] = x[i]
-                    new_y[i] = y[i]
-
-                elif i < a + (np.abs(b - a)):
-                    new_x[i] = x[(c + t1) % N]
-                    new_y[i] = y[(c + t1) % N]
-                    t1 +=1
-                
-                else:
-                    new_x[i] = x[(a + t2) % N]
-                    new_y[i] = y[(a + t2) % N]
-                    t2+=1
+            new_x[(a + i) % N], new_x[(c + i) % N] = new_x[(c + i) % N], new_x[(a + i) % N]
+            new_y[(a + i) % N], new_y[(c + i) % N] = new_y[(a + i) % N], new_y[(c + i) % N]
 
     else: 
 
-        # If the segment enters back
-        if (c + np.abs(b - a)) > len(x):
+        d = np.abs(b - a)
 
-            R = (c + np.abs(b - a)) % N
-            t1, t2 = 0, 0
+        for i in range(d):
 
-            for i in range(len(x)):
-                
-                if i < R:
-                    new_x[i] = x[(b + (np.abs(b - a) - R) + t1) % N]
-                    new_y[i] = y[(b + (np.abs(b - a) - R) + t1) % N]
-                    t1+=1
-
-                elif i < b + (np.abs(b - a)):
-                    new_x[i] = x[(b + t2) % N]
-                    new_y[i] = y[(b + t2) % N]
-                    t2 +=1
-                
-                else:
-                    new_x[i] = x[i]
-                    new_y[i] = y[i]
-
-        # If the segment does not enter back
-        else: 
-            
-            t1 , t2 = 0, 0
-
-            for i in range(len(x)):
-
-                if i < b:
-                    new_x[i] = x[i]
-                    new_y[i] = y[i]
-
-                elif i < b + (np.abs(b - a)):
-                    new_x[i] = x[(c + t1) % N]
-                    new_y[i] = y[(c + t1) % N]
-                    t1 +=1
-                
-                else:
-                    new_x[i] = x[(c + t2) % N]
-                    new_y[i] = y[(c + t2) % N]
-                    t2+=1
-
-    print("New: ", new_x)
+            new_x[(b + i) % N], new_x[(c + i) % N] = new_x[(c + i) % N], new_x[(b + i) % N]
+            new_y[(b + i) % N], new_y[(c + i) % N] = new_y[(c + i) % N], new_y[(b + i) % N]
 
     return new_x, new_y
 
@@ -204,11 +131,14 @@ def optimize_grid(x, y, max_itr):
     Computes the Euclidean Norm at each iteration and measures the loss function
     """
 
-    loss_function = np.zeros(max_itr)
+    loss_function = np.zeros(int(max_itr), dtype = np.float64)
     last_error = get_euclidean_distance(x, y)
     loss_function[0] = last_error
 
     for i in range(1, max_itr):
+
+        temp_x = np.zeros(len(x))
+        temp_y = np.zeros(len(y))
 
         # Decrease "Temperature"
         T = 1 - (i / max_itr)
@@ -222,19 +152,23 @@ def optimize_grid(x, y, max_itr):
             # Check Error
             error = get_euclidean_distance(temp_x, temp_y)
             diff = error - last_error
-            
-            # Update Error
-            last_error = error
 
+            # Metropolis Hastings
             if diff < 0 or np.exp(-(diff / T)) > np.random.uniform(0, 1, 1)[0]:
 
                 # Update City
                 x = temp_x
                 y = temp_y
                 loss_function[i] = error
+
+                # Update Error
+                last_error = error
             
             else:
+
                 loss_function[i] = loss_function[i -  1]
+                # Update Error
+                last_error = error
 
         else:
 
@@ -244,10 +178,8 @@ def optimize_grid(x, y, max_itr):
             # Check Error
             error = get_euclidean_distance(temp_x, temp_y)
             diff = error - last_error
-            
-            # Update Error
-            last_error = error
 
+            # Metropolis Hastings
             if diff < 0 or np.exp(-(diff / T)) > np.random.uniform(0, 1, 1)[0]:
 
                 # Update City
@@ -255,8 +187,14 @@ def optimize_grid(x, y, max_itr):
                 y = temp_y
                 loss_function[i] = error
 
+                # Update Error
+                last_error = error
+
             else:
+
                 loss_function[i] = loss_function[i -  1]
+                # Update Error
+                last_error = error
 
     return x, y, loss_function
 
@@ -264,7 +202,7 @@ if __name__ == "__main__":
 
     def main():
 
-        N = 10
+        N = 100
         max_itr = 100 * N
         x, y = generate_grid(N)
 
@@ -298,9 +236,6 @@ if __name__ == "__main__":
         ax1.plot(loss_function)
         ax1.set_title("Loss Function")
 
-        plt.show()
-        quit()
-
         # Begin Optimization
 
         N = np.linspace(50, 1000, 100, dtype = np.int64)
@@ -312,7 +247,7 @@ if __name__ == "__main__":
             x, y = generate_grid(N[i])
             max_itr[i] = N[i] * 100
 
-            final_x, final_y = optimize_grid(x, y, max_itr[i])
+            final_x, final_y, _ = optimize_grid(x, y, max_itr[i])
             fnorm = get_euclidean_distance(final_x, final_y)
             norm[i] = fnorm
 
