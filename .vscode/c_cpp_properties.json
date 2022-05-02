@@ -4,14 +4,10 @@
             "name": "Win32",
             "includePath": [
                 // Desktop
-                // "C:/Users/18627/Documents/GitHub/CompPhysics/Introductory/mandelbroat/compare_languages",
-                // "C:/Users/18627/Documents/GitHub/CompPhysics/Introductory/mandelbroat/cpp",
                 // "C:/Users/18627/AppData/Local/Programs/Python/Python310/include",
                 // "C:/Users/18627/AppData/Local/Programs/Python/Python310/Lib/site-packages/pybind11/include"
 
                 // Laptop
-                "C:/Users/Steve/Documents/GitHub/CompPhysics/Introductory/mandelbroat/compare_languages",
-                "C:/Users/Steve/Documents/GitHub/CompPhysics/Introductory/mandelbroat/cpp",
                 "C:/Users/Steve/Appdata/Local/Programs/Python/Python39/Include",
                 "C:/Users/Steve/AppData/Local/Programs/Python/Python39/lib/site-packages/pybind11/include"
 
